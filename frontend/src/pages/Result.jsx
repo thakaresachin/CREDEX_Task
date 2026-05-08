@@ -191,7 +191,9 @@ const Result = () => {
     if (!auditId) return;
     setSummaryLoading(true);
     try {
-      const res = await API.post("/ai/summary", { auditId });
+      const res = await API.post("/ai/summary", {
+  auditId,
+})
       setSummary(res.data.summary);
     } catch {
       setSummary(
