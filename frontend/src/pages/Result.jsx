@@ -204,16 +204,24 @@ const Result = () => {
   const handleLeadChange = (e) => setLeadData({ ...leadData, [e.target.name]: e.target.value });
 
   const saveLead = async () => {
-    if (!leadData.email) return;
-    setLeadLoading(true);
-    try {
-      await API.post("/leads/save", { ...leadData, summary, auditId: auditData.audit._id });
-      setLeadSaved(true);
-    } catch {
-      alert("Failed to send report. Please try again.");
-    }
-    setLeadLoading(false);
-  };
+  if (!leadData.email) return;
+  setLeadLoading(true);
+  try {
+    await API.post("/leads/save", { 
+      ...leadData, 
+      summary, 
+      auditId: auditData.audit._id 
+    }, {
+      timeout: 30000 // 30 second timeout
+    });
+    setLeadSaved(true);
+  } catch (err) {
+    console.error("Lead save error:", err);
+    alert("Failed to send report. Please check your connection and try again.");
+  } finally {
+    setLeadLoading(false); // ← Always resets, even on timeout
+  }
+};
 
   const copyShareLink = () => {
     const url = auditData?.audit?.shareId
