@@ -182,7 +182,7 @@ const Hero = () => {
         teamSize: Number(teamSize),
         useCase,
       };
-      const res = await API.post("/audit/calculate", payload);
+      const res = await API.post("/calculate", payload);
       localStorage.setItem("auditData", JSON.stringify(res.data));
       navigate("/result");
     } catch (error) {
