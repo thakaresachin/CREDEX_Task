@@ -15,28 +15,28 @@ const saveLead = async (req, res) => {
       teamSize,
     });
 
-    const audit = await Audit.findById(auditId);
-
-    // ✅ response immediately
+    // ✅ Send response immediately
     res.status(201).json({
       success: true,
       lead,
     });
 
-    // ✅ send mail after response
-    if (audit) {
-      setImmediate(async () => {
-        try {
+    // ✅ Background task safely
+    process.nextTick(async () => {
+      try {
+        const audit = await Audit.findById(auditId);
+
+        if (audit) {
           await sendAuditEmail(email, audit);
-          console.log("EMAIL SENT");
-        } catch (err) {
-          console.log("EMAIL ERROR:", err.message);
+          console.log("EMAIL SENT SUCCESSFULLY");
         }
-      });
-    }
+      } catch (err) {
+        console.log("BACKGROUND EMAIL ERROR:", err);
+      }
+    });
 
   } catch (error) {
-    console.log(error);
+    console.log("LEAD ERROR:", error);
 
     res.status(500).json({
       success: false,
