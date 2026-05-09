@@ -3,17 +3,12 @@ import nodemailer from "nodemailer";
 const sendAuditEmail = async (email, audit) => {
   // ✅ Transporter created inside function so env vars are loaded
   const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
-    secure: false,
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-    tls: {
-      rejectUnauthorized: false,
-    },
-  });
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
 
   try {
     console.log("EMAIL_USER:", process.env.EMAIL_USER);
