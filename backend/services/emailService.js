@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 
 const sendAuditEmail = async (email, audit) => {
   // ✅ Transporter created inside function so env vars are loaded
-  const transporter = nodemailer.createTransport({
+ const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: process.env.EMAIL_USER,

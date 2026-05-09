@@ -17,19 +17,26 @@ const saveLead = async (req, res) => {
 
     const audit = await Audit.findById(auditId);
 
-    // ✅ WAIT for mail
-    if (audit) {
-      await sendAuditEmail(email, audit);
-    }
-
-    // ✅ send response AFTER mail
+    // ✅ response immediately
     res.status(201).json({
       success: true,
       lead,
     });
 
+    // ✅ send mail after response
+    if (audit) {
+      setImmediate(async () => {
+        try {
+          await sendAuditEmail(email, audit);
+          console.log("EMAIL SENT");
+        } catch (err) {
+          console.log("EMAIL ERROR:", err.message);
+        }
+      });
+    }
+
   } catch (error) {
-    console.log("LEAD ERROR:", error);
+    console.log(error);
 
     res.status(500).json({
       success: false,
